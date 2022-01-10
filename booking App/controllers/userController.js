@@ -34,28 +34,30 @@ module.exports={
 
     
 
-    // login : async (req, res) => {
-    //     const { email, password } = req.body;
+    login : async (req, res) => {
+        const { email, password } = req.body;
       
-    //     const user = await User.findOne({ email });
+        const user = await User.findOne({ email });
       
-    //     if (!user) {
-    //         res.status(401).send({
-    //             message: "user already exist"
-    //         })
-    //     }
+        if (!user) {
+            res.status(401).send({
+                message: "user already exist"
+            })
+        }
       
-    //     const isMatch = await bcrypt.compare(password, user.password);
+        const isMatch = await bcrypt.compare(password, user.password);
       
-    //     if (!isMatch) {
-    //       req.session.error = "Invalid Credentials";
-    //       return res.redirect("/login");
-    //     }
+        if (!isMatch) {
+                  return res.status(401).send({
+            message: "Invalid Credentials"
+        })
+        }
+        return res.status(200).send({
+          message: "login successful"
+      })
       
-    //     req.session.isAuth = true;
-    //     req.session.username = user.username;
-    //     res.redirect("/dashboard");
-    //   }
+   
+      }
 
 
 }
