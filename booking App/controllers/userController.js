@@ -34,14 +34,14 @@ module.exports={
 
     
 
-    login : async (req, res) => {
+    Login : async (req, res) => {
         const { email, password } = req.body;
       
         const user = await User.findOne({ email });
       
         if (!user) {
             res.status(401).send({
-                message: "user already exist"
+                message: "Invalid Credentials"
             })
         }
       
@@ -52,6 +52,8 @@ module.exports={
             message: "Invalid Credentials"
         })
         }
+
+        
         return res.status(200).send({
           message: "login successful"
       })
