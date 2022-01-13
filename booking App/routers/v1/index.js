@@ -9,7 +9,7 @@ const customer = require("./customer");
 const good = require("./good");
 
 
-router.use("/", User);
+router.use("/users", User);
 router.use("/orders", Order);
 router.use("/customers", customer);
 router.use("/goods", good);
