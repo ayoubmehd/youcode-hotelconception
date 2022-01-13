@@ -39,8 +39,8 @@ const orderSchema = new Schema({
     type: Schema.Types.Decimal128,
   },
   goods: [{ type: Schema.Types.ObjectId, ref: 'Good' }],
-  customer: { type: Schema.Types.ObjectId, ref: 'Customer' },
-//   customer:customerSchema ,
+//   customer: { type: Schema.Types.ObjectId, ref: 'Customer' },
+  customer:customerSchema ,
   
   create_at: { type: Date, default: Date.now },
 
