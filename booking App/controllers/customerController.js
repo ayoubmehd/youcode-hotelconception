@@ -43,7 +43,7 @@ module.exports = {
         const customer = await Customer.findById(req.params.id);
 
         if (!customer) {
-            res.status(404).json({
+            return res.status(404).json({
                 message: "Customer Not Found",
             });
         }
