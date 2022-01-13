@@ -1,65 +1,87 @@
 
-const bcrypt = require("bcryptjs");
+// const bcrypt = require("bcryptjs");
+// const user = require("../models/User");
 
 const User = require("../models/User");
 
+module.exports={ 
 
-module.exports={
 
-      
-      Register :  async (req, res) => {
-        const {  email, password } = req.body;
-      
-        let user = await User.findOne({ email });
-      
-        if (user) {
-            return res.status(401).send({
-                message: "user already exist"
-            })
-        }
-      
-        const hasdPsw = await bcrypt.hash(password, 12);
-      
-        user = new User({
-          email,
-          password: hasdPsw,
+    getAll : async (req, res) => {
+        const page = req.query.page ?? req.query.page <= 0 ? req.query.page : 1;
+        const perpage = 10;
+
+        const users = await User.find().skip((page - 1) * perpage).limit(perpage);
+        res.json({
+            data: users,
+            prevPage: page > 1 ? page - 1 : null,
+            currentPage: +page,
+            nextPage: page < users.length - 1 ? +page + 1 : null
         });
+
+    },
       
+
+   getById :  async (req, res) => {
+        const user = await User.findById(req.params.id);
+        if (!user) {
+            return res.status(404).json({
+                message: "user Not Found",
+            });
+        }
+
+        res.json(user);
+    },
+
+
+    create : async(req, res) => {
+
+        const user = new User(req.body);
+
         await user.save();
 
-        return res.status(201).send({
-            message: "user Created"
-        })
-      },
+        res.status(201).json({
+            message: "user created successfully",
+            data: user,
+        });
+    },
 
-    
 
-    Login : async (req, res) => {
-        const { email, password } = req.body;
-      
-        const user = await User.findOne({ email });
-      
+    update :  async(req, res) => {
+        const user = await User.findByIdAndUpdate(req.params.id, req.body);
+
         if (!user) {
-            res.status(401).send({
-                message: "Invalid Credentials"
-            })
-        }
-      
-        const isMatch = await bcrypt.compare(password, user.password);
-      
-        if (!isMatch) {
-                  return res.status(401).send({
-            message: "Invalid Credentials"
-        })
+            return res.status(404).json({
+                message: "user not found",
+            });
         }
 
-        
-        return res.status(200).send({
-          message: "login successful"
-      })
-      
-   
-      }
+        res.json({
+            message: "user updated successfully",
+            data: customer
+        });
+    }, 
 
+
+    destroy : async (req, res) => {
+
+        const user = await User.findByIdAndDelete(req.params.id);
+
+        if (!user) {
+            res.status(404).json({
+                message: "user Not Found",
+            });
+        }
+
+        res.status(202).json({
+            message: "user deleted sccessfully",
+            data: user
+        });
+    },    
 
 }
+
+  
+
+
+
