@@ -11,6 +11,7 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
+  create_at: { type: Date, default: Date.now },
 });
 
 module.exports = mongoose.model("User", userSchema);
