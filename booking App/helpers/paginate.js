@@ -1,12 +1,13 @@
-module.exports = async (Model, page = 1, perpage = 10) => {
+module.exports = async (Model, page = 1, query = {}, perpage = 10) => {
 
     page = page ?? page <= 0 ? page : 1;
 
-    const allCount = await Model.find().count();
+    const allCount = await Model.find(query).count();
 
     const totalPage = Math.ceil(allCount / perpage);
+    // 1.1 => 2
 
-    const data = await Model.find().skip((page - 1) * perpage).limit(perpage);
+    const data = await Model.find(query).skip((page - 1) * perpage).limit(perpage);
 
     return {
         data,
