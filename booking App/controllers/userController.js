@@ -1,7 +1,5 @@
 
-// const bcrypt = require("bcryptjs");
-// const user = require("../models/User");
-
+const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 
 module.exports={ 
@@ -36,9 +34,27 @@ module.exports={
 
     create : async(req, res) => {
 
-        const user = new User(req.body);
+        const {username, password} = req.body;
 
-        await user.save();
+
+    // check if user already exist
+    // Validate if user exist in our database
+    const oldUser = await User.findOne({ username });
+
+    if (oldUser) {
+      return res.status(409).send("User Already Exist. Please Login");
+    }
+
+
+    //Encrypt user password
+    const encryptedPassword = await bcrypt.hash(password, 12);
+
+      // Create user in our database
+      const user = await User.create({
+        username: username.toLowerCase(), // sanitize: convert email to lowercase
+        password: encryptedPassword,
+      });
+
 
         res.status(201).json({
             message: "user created successfully",
